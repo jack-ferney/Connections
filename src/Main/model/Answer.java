@@ -1,26 +1,33 @@
 package Main.model;
 
+import Main.ui.OptionButton;
+
 public class Answer {
 
     private String answer;
-    private Boolean selected;
+    private Group group;
+    private OptionButton optionButton;
 
-    public Answer(String answer) {
-        this.answer = answer;
-        this.selected = false;
+    public Answer(String desc) {
+        this.answer = desc;
+        this.group = null;
     }
 
     public String getAnswer() {
-        return this.answer;
+        return answer;
     }
 
-    public void select() {
-        if (!selected) {
-            selected = true;
+    public void setGroup(Group answer) {
+        if (group == null) {
+            group = answer;
         }
     }
 
-    public Boolean getSelected() {
-        return selected;
+    public void solved(Group group) {
+        optionButton.setSelectable(group);
+    }
+
+    public void addButton(OptionButton optionButton) {
+        this.optionButton = optionButton;
     }
 }
