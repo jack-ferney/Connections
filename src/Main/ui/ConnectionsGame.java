@@ -42,6 +42,7 @@ public class ConnectionsGame extends JFrame {
             groups = randomizeGroups();
         } else {
             System.out.println("Invalid. Restart to try again.");
+            System.out.println("Plz try again its really fun! :)");
             dispose();
         }
         groups.get(0).setSolvedColor(new Color(40, 112, 255));
