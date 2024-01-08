@@ -17,17 +17,37 @@ public class ConnectionsGame extends JFrame {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
     public Scanner input = new Scanner(System.in);
-    private Group firstGroup;
-    private Group secondGroup;
-    private Group thirdGroup;
-    private Group forthGroup;
     private List<Group> groups;
     private List<Answer> options;
     private SubmitButton submitButton;
+    private Group Oceanography = new Group("Oceanography");
+    private Group SpaceExploration = new Group("Space Exploration");
+    private Group CulinaryArts = new Group("Culinary Things");
+    private Group TechnologyTrends = new Group("Technology Trends");
+    private Group NHLTeams = new Group("NHL Teams");
+    private Group ThingSaidTwice = new Group("Things said in succession");
+    private Group TypesOfShoes = new Group("Types of shoes");
+    private Group BlankBall = new Group("_____ ball");
+    private List<Group> groupsConstant = new ArrayList<>();
 
     public ConnectionsGame() {
         super("Connections! (By Jack)");
-        groups = setupGroups();
+        setupConstants();
+        System.out.println("Do you want to (M)ake your own prompts or use (G)iven ones?");
+        String choice = input.nextLine();
+        choice = choice.toLowerCase();
+        if (choice.equals("m")) {
+            groups = setupGroups();
+        } else if (choice.equals("g")) {
+            groups = randomizeGroups();
+        } else {
+            System.out.println("Invalid. Restart to try again.");
+            dispose();
+        }
+        groups.get(0).setSolvedColor(new Color(40, 112, 255));
+        groups.get(1).setSolvedColor(new Color(243,255,46));
+        groups.get(2).setSolvedColor(new Color(56, 201, 31));
+        groups.get(3).setSolvedColor(new Color(168, 114, 255));
         options = setupOptions();
         this.mistakesAllowed = 4;
         this.selectedOptions = new ArrayList<>();
@@ -37,20 +57,36 @@ public class ConnectionsGame extends JFrame {
         setVisible(true);
     }
 
+    private List<Group> randomizeGroups() {
+        Collections.shuffle(groupsConstant);
+        return groupsConstant.subList(0,4);
+    }
+
+    private void setupConstants() {
+        Oceanography.buildGroupConstant("Coral", "Tide","Seabed","Fish");
+        groupsConstant.add(Oceanography);
+        SpaceExploration.buildGroupConstant("Rocket", "Galaxy", "Nebula", "Astro");
+        groupsConstant.add(SpaceExploration);
+        CulinaryArts.buildGroupConstant("Recipe", "Spice", "Utensils", "Cook");
+        groupsConstant.add(CulinaryArts);
+        TechnologyTrends.buildGroupConstant("Chain","Automation","AI","Crypto");
+        groupsConstant.add(TechnologyTrends);
+        NHLTeams.buildGroupConstant("Blues", "Senators", "Flames", "Sharks");
+        groupsConstant.add(NHLTeams);
+        ThingSaidTwice.buildGroupConstant("Hear","Aye","Tut","Ho");
+        groupsConstant.add(ThingSaidTwice);
+        TypesOfShoes.buildGroupConstant("Dunks","Runners","Joggers","Cowboy");
+        groupsConstant.add(TypesOfShoes);
+        BlankBall.buildGroupConstant("Base","Basket","Cheese","Chocolate");
+        groupsConstant.add(BlankBall);
+    }
+
     private List<Group> setupGroups() {
-        firstGroup = setupGroup();
-        firstGroup.setSolvedColor(new Color(31, 108, 255));
-        secondGroup = setupGroup();
-        secondGroup.setSolvedColor(new Color(243, 255, 46));
-        thirdGroup = setupGroup();
-        thirdGroup.setSolvedColor(new Color(36, 155, 16));
-        forthGroup = setupGroup();
-        forthGroup.setSolvedColor(new Color(123, 93, 169));
         List<Group> groups = new ArrayList<>();
-        groups.add(firstGroup);
-        groups.add(secondGroup);
-        groups.add(thirdGroup);
-        groups.add(forthGroup);
+        groups.add(setupGroup());
+        groups.add(setupGroup());
+        groups.add(setupGroup());
+        groups.add(setupGroup());
         return groups;
     }
 
@@ -90,13 +126,10 @@ public class ConnectionsGame extends JFrame {
         for (Answer answer : options) {
             new OptionButton(this, optionsArea, answer);
         }
-        JPanel submitArea = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        submitButton = new SubmitButton(this, submitArea);
-        add(submitArea, BorderLayout.SOUTH);
-    }
-
-    public List<Answer> getSelectedOptions() {
-        return selectedOptions;
+        JPanel buttonArea = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        submitButton = new SubmitButton(this, buttonArea);
+        SoFarButton soFarButton = new SoFarButton(this, buttonArea);
+        add(buttonArea, BorderLayout.SOUTH);
     }
 
     public void select(OptionButton optionButton) {
@@ -118,13 +151,13 @@ public class ConnectionsGame extends JFrame {
     public void submit() {
         if (submitButton.getReady()) {
             if (checkFirstGroup()) {
-                correctAnswer(firstGroup);
+                correctAnswer(groups.get(0));
             } else if (checkSecondGroup()) {
-                correctAnswer(secondGroup);
+                correctAnswer(groups.get(1));
             } else if (checkThirdGroup()) {
-                correctAnswer(thirdGroup);
+                correctAnswer(groups.get(2));
             } else if (checkForthGroup()) {
-                correctAnswer(forthGroup);
+                correctAnswer(groups.get(3));
             } else {
                 mistakesAllowed--;
                 JOptionPane.showMessageDialog(null, "Incorrect\nYou have " + mistakesAllowed
@@ -164,7 +197,7 @@ public class ConnectionsGame extends JFrame {
 
     private boolean checkForthGroup() {
         for (Answer ans : selectedOptions) {
-            if (!forthGroup.getCorrectAnswers().contains(ans)) {
+            if (!groups.get(3).getCorrectAnswers().contains(ans)) {
                 return false;
             }
         }
@@ -173,7 +206,7 @@ public class ConnectionsGame extends JFrame {
 
     private boolean checkThirdGroup() {
         for (Answer ans : selectedOptions) {
-            if (!thirdGroup.getCorrectAnswers().contains(ans)) {
+            if (!groups.get(2).getCorrectAnswers().contains(ans)) {
                 return false;
             }
         }
@@ -182,7 +215,7 @@ public class ConnectionsGame extends JFrame {
 
     private boolean checkSecondGroup() {
         for (Answer ans : selectedOptions) {
-            if (!secondGroup.getCorrectAnswers().contains(ans)) {
+            if (!groups.get(1).getCorrectAnswers().contains(ans)) {
                 return false;
             }
         }
@@ -191,10 +224,20 @@ public class ConnectionsGame extends JFrame {
 
     private boolean checkFirstGroup() {
         for (Answer ans : selectedOptions) {
-            if (!firstGroup.getCorrectAnswers().contains(ans)) {
+            if (!groups.get(0).getCorrectAnswers().contains(ans)) {
                 return false;
             }
         }
         return true;
+    }
+
+    public void soFar() {
+        String soFar = "Answers gotten so far:\n";
+        for (Group group : groups) {
+            if (group.getSolved()) {
+                soFar += " - " + group.getTopic() + "\n";
+            }
+        }
+        JOptionPane.showMessageDialog(null, soFar);
     }
 }
