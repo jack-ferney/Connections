@@ -27,6 +27,10 @@ public class Answer {
         optionButton.setSelectable(group);
     }
 
+    public void deselect() {
+        optionButton.deselect();
+    }
+
     public void addButton(OptionButton optionButton) {
         this.optionButton = optionButton;
     }

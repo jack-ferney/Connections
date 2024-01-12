@@ -28,6 +28,18 @@ public class ConnectionsGame extends JFrame {
     private Group ThingSaidTwice = new Group("Things said in succession");
     private Group TypesOfShoes = new Group("Types of shoes");
     private Group BlankBall = new Group("_____ ball");
+    private Group SpiderStuff = new Group("Spider Things");
+    private Group HairBlank = new Group("Hair _____");
+    private Group Homophones = new Group("Homophones");
+    private Group TVShowComps = new Group("TV Components");
+    private Group FighterPlanes = new Group("Fighter Planes");
+    private Group GolfStuff = new Group("Things found on a golf course");
+    private Group Burgers = new Group("Types of burger");
+    private Group TypesOfPhysics = new Group("Fields of Physics");
+    private Group Airlines = new Group("Airlines");
+    private Group GreekLetters = new Group("Greek Letters");
+    private Group AppleDevices = new Group("Apple devices that start with an i");
+    private Group CodeLanguages = new Group("Code Languages");
     private List<Group> groupsConstant = new ArrayList<>();
 
     public ConnectionsGame() {
@@ -80,6 +92,30 @@ public class ConnectionsGame extends JFrame {
         groupsConstant.add(TypesOfShoes);
         BlankBall.buildGroupConstant("Base","Basket","Cheese","Chocolate");
         groupsConstant.add(BlankBall);
+        SpiderStuff.buildGroupConstant("Web","Silk","Eggs","Venom");
+        groupsConstant.add(SpiderStuff);
+        HairBlank.buildGroupConstant("Brush","Clip","Tie","Spray");
+        groupsConstant.add(HairBlank);
+        Homophones.buildGroupConstant("Eight","Flower","Cell","Know");
+        groupsConstant.add(Homophones);
+        TVShowComps.buildGroupConstant("Pilot","Episode","Finale","Season");
+        groupsConstant.add(TVShowComps);
+        FighterPlanes.buildGroupConstant("Spitfire","Hurricane","Typhoon","Lightning");
+        groupsConstant.add(FighterPlanes);
+        GolfStuff.buildGroupConstant("Club","Cart","Ball","Tee");
+        groupsConstant.add(GolfStuff);
+        Burgers.buildGroupConstant("Whopper","Big Mac","Slider","Smash");
+        groupsConstant.add(Burgers);
+        TypesOfPhysics.buildGroupConstant("Thermodynamics","Mechanics","Relativity","Quantum");
+        groupsConstant.add(TypesOfPhysics);
+        Airlines.buildGroupConstant("Delta","Bombardier","Flair","Alaskan");
+        groupsConstant.add(Airlines);
+        GreekLetters.buildGroupConstant("Zeta","Sigma","Theta","Kappa");
+        groupsConstant.add(GreekLetters);
+        AppleDevices.buildGroupConstant("Phone","Pad","Mac","Pod");
+        groupsConstant.add(AppleDevices);
+        CodeLanguages.buildGroupConstant("Python","C","R","Java");
+        groupsConstant.add(CodeLanguages);
     }
 
     private List<Group> setupGroups() {
@@ -130,6 +166,7 @@ public class ConnectionsGame extends JFrame {
         JPanel buttonArea = new JPanel(new FlowLayout(FlowLayout.CENTER));
         submitButton = new SubmitButton(this, buttonArea);
         SoFarButton soFarButton = new SoFarButton(this, buttonArea);
+        DeselectButton deselectButton = new DeselectButton(this,buttonArea);
         add(buttonArea, BorderLayout.SOUTH);
     }
 
@@ -169,8 +206,16 @@ public class ConnectionsGame extends JFrame {
     }
 
     private void checkGameOver() {
+        String Answers = "Answers:\n";
+        for (Group group : groups) {
+            Answers += "- " + group.getTopic() + ": \n";
+            for (Answer answer : group.getCorrectAnswers()) {
+                Answers += "       -- " + answer.getAnswer() + "\n";
+            }
+        }
         if (mistakesAllowed == 0) {
             JOptionPane.showMessageDialog(null, "Game over! :/");
+            JOptionPane.showMessageDialog(null, Answers);
             dispose();
         } else if (checkAllSolved()) {
             JOptionPane.showMessageDialog(null, "Correct! Well done!");
@@ -237,8 +282,19 @@ public class ConnectionsGame extends JFrame {
         for (Group group : groups) {
             if (group.getSolved()) {
                 soFar += " - " + group.getTopic() + "\n";
+                for (Answer answer : group.getCorrectAnswers()) {
+                    soFar += "       -- " + answer.getAnswer() + "\n";
+                }
             }
         }
         JOptionPane.showMessageDialog(null, soFar);
+    }
+
+    public void deselectAll() {
+        for (Answer button : selectedOptions) {
+            button.deselect();
+        }
+        selectedOptions.removeAll(selectedOptions);
+        submitButton.unReady();
     }
 }
